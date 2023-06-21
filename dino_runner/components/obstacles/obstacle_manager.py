@@ -28,7 +28,7 @@ class ObstacleManeger:
                 break
 
     def reset_obstacles(self):
-        self.obstacles
+        self.obstacles = []
 
             
     def draw(self, screen):
