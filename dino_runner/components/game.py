@@ -1,11 +1,10 @@
 import pygame
 
-from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
+from dino_runner.utils.constants import *
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManeger
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
 
-FONT_STYLE = 'freesansbold.ttf'
 
 class Game:
     def __init__(self):
@@ -86,13 +85,13 @@ class Game:
         self.x_pos_bg -= self.game_speed
 
     def draw_score(self):
-       self.render_text(f"score: {self.score}", (1000, 50))
+       self.draw_text(f"score: {self.score}", (1000, 50))
 
     def draw_power_up_time(self):
         if self.player.has_power_up:
             time_to_show = round((self.player.power_up_time - pygame.time.get_ticks()) / 1000, 2)
             if time_to_show >= 0:
-                 self.render_text(f'{self.player.type.capitalize()} ENABLED FOR {time_to_show} SECONDS',(500,50))
+                 self.draw_text(f'{self.player.type.capitalize()} ENABLED FOR {time_to_show} SECONDS',(500,50))
             else:
                 self.player.has_power_up = False
                 self.player.type = DEFAULT_TYPE
@@ -111,21 +110,28 @@ class Game:
         half_screen_width = SCREEN_WIDTH // 2
 
         if self.death_count == 0:
-            self.render_text("Press any key to start", (half_screen_width, half_screen_height))
+            self.draw_text("Press any key to start", (half_screen_width, half_screen_height))
         else:
-            self.screen.blit(ICON, (half_screen_width - 30, half_screen_height - 130)) ## mostra mensagem de "Press any key to restart"
-            self.render_text("Press any key to restart", (half_screen_width, half_screen_height))
-            self.render_text(f"You score: {self.score}", (half_screen_width, half_screen_height + 50)) ## mostrar score atingido
-            self.render_text(f"Deaths: {self.death_count}", (half_screen_width, half_screen_height + 100))   ## mostra death_count
+            self.screen.blit(ICON, (half_screen_width - 35, half_screen_height - 130)) ## mostra mensagem de "Press any key to restart"
+            self.draw_text("Press any key to restart", (half_screen_width, half_screen_height))
+            self.draw_text(f"You score: {self.score}", (half_screen_width, half_screen_height + 50)) ## mostrar score atingido
+            self.draw_text(f"Deaths: {self.death_count}", (half_screen_width, half_screen_height + 100))   ## mostra death_count
 
 
         pygame.display.update()
 
         self.handle_events_on_menu()
 
-    def render_text(self, text, position):
-        font = pygame.font.Font(FONT_STYLE, 22)
-        rendered_text = font.render(text, True, (0, 0, 0))
-        text_rect = rendered_text.get_rect()
-        text_rect.center = position
-        self.screen.blit(rendered_text, text_rect)
+   
+    def draw_text(self,
+                 text,text_rect,
+                  font_size=35,
+                  font_style = FONT_STYLE[0],
+                  font_color = (255, 0, 0)
+                  ):
+        font = pygame.font.Font(font_style, font_size)
+        self.text = font.render(f'{text}', True, (font_color))
+        self.text_rect = self.text.get_rect()
+        self.text_rect.center = text_rect
+        self.screen.blit(self.text, self.text_rect)
+        
